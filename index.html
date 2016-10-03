@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>REST </title>
+        <link rel="shortcut icon" type="image/css" href="http://www.vitrium.com/media/uploads/2010/03/RESTful-API-icon.png"/>
+        <meta name="description" content="HTML & CSS for RESTfull API">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="main.css">
+        <script type="text/javascript" src="jquery-2.2.4.min.js" defer></script>
+        <script type="text/javascript" src="knockout-3.4.0.js" defer></script>
+        <script type="text/javascript" src="kcnockout.mapping-latest.js" defer></script>
+        <script type="text/javascript" src="scripts.js" defer></script>
+    </head>
+    <body>
+        <div class="main">
+            <div class="header">
+                <header>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/HTML5_logo_and_wordmark.svg/100px-HTML5_logo_and_wordmark.svg.png" >
+                    <h1>Student Grade Manager</h1>
+                </header>
+            </div>
+
+            <nav class="bar">
+                <ul>
+                    <li><a href="#students">Manage students</a></li>
+                    <li><a href="#subjects">Manage courses</a></li>
+                </ul>
+            </nav>
+
+            <article id="students" class="content">
+                <header><h2>Student table</h2></header>
+                <div class="filter" id="StudentFilter">
+                    <h4 >Filters:</h4>
+                    <input class="shortInput" type="text" placeholder="Name" data-bind="textInput: studentsName">
+                    <input type="text" placeholder="Last name" data-bind="textInput: studentsLastName">
+                    <input type="number" min="1" placeholder="Index" data-bind="textInput: studentsIndex">
+                    <input type="text" onfocus="(this.type='date')" placeholder="Birthday" data-bind="textInput: studentsBirthDate">
+                </div>
+
+                <table id="studentsTable">
+                    <thead>
+                        <tr>
+                            <td>Index</td>
+                            <td>First name</td>
+                            <td>Last name</td>
+                            <td>Birthday</td>
+                            <td class="actionColumn">Actions</td>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: students()">
+                        <tr>
+                            <td><input data-bind="value: index" type="number" min="1"/></td>
+                            <td><input data-bind="value: name" type="text"/></td>
+                            <td><input data-bind="value: lastName" type="text"/></td>
+                            <td><input type="date" data-bind="value: birthDate" /></td>
+                            <td data-bind="visible: ($index() < ($parent.students().length-1))">
+                                <a href="#grades" data-bind="click: $root.getGrades">See grades</a>
+                                <button data-bind="click: $root.deleteStudent">Delete</button>
+                                <button data-bind="click: $root.editStudent">Edit</button>
+                            </td>
+                            <td data-bind="visible: ($index() == ($parent.students().length-1))">
+                                <button data-bind="click: $root.addStudent">Add</button>
+                                <button data-bind="click: $root.hideStudent">Cancel</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button id="studentAddButton">Add</button>
+            </article>
+
+            <article id="grades" class="content">
+                <header><h2>Grade table</h2></header>
+                <div class="filter" id="GradeFilter"> 
+                    <h4>Filters:</h4>
+                    <input type="text" placeholder="Course" data-bind="textInput: gradesCourse">
+                    <input type="text" onfocus="(this.type='date')" placeholder="Issue date" data-bind="textInput: gradesDate">
+                    <input type="number" min="3.0" max="5.0" step=0.5 placeholder="Value" data-bind="textInput: gradesValue">
+                </div>
+
+                <table id="studentsGradesTable">
+                    <thead>
+                        <tr>
+                            <td>Course</td>
+                            <td>Issue date</td>
+                            <td>Value</td>
+                            <td class="actionColumn">Actions</td>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: grades()">
+                        <tr>
+                            <td><input data-bind="value: subject.name" type="text"/></td>
+                            <td><input data-bind="value: issueDate" type="date"/></td>
+                            <td><input data-bind="value: value" step="0.5" type="number" min="2" max="5"/></td>
+                            <td class="actionColumn" data-bind="visible: ($index() < ($parent.grades().length-1))">
+                                <button data-bind="click: $root.deleteGrade">Delete</button>
+                                <button data-bind="click: $root.editGrade">Edit</button>
+                            </td>
+                            <td class="actionColumn" data-bind="visible: ($index() == ($parent.grades().length-1))">
+                                <button data-bind="click: $root.addGrade">Add</button>
+                                <button data-bind="click: $root.hideGrade">Cancel</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button id="gradeAddButton">Add</button>
+            </article>
+
+            <article id="subjects" class="content">
+                <header><h2>Courses table</h2></header>
+                <table id="coursesTable">
+                    <thead>
+                        <tr>
+                            <td>Lecturer</td>
+                            <td>Course</td>
+                            <td>Actions</td>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: subjects()">
+                        <tr>
+                            <td><input data-bind="value: lecturer" type="text"/></td>
+                            <td><input data-bind="value: name"/></td>
+                            <td class="actionColumn" data-bind="visible: ($index() < ($parent.subjects().length-1))">                        
+                                <button data-bind="click: $root.deleteCourse">Delete</button>
+                                <button data-bind="click: $root.editCourse">Edit</button>
+                            </td>
+                            <td class="actionColumn" data-bind="visible: ($index() == ($parent.subjects().length-1))">                     
+                                <button data-bind="click: $root.addCourse">Add</button>
+                                <button data-bind="click: $root.hideCourse">Cancel</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button id="courseAddButton">Add</button>
+            </article>
+        
+            <footer>
+                <p id="author">@2016 Patryk Kudła</p>
+                <ul>
+                    <li><a href="http://fc.put.poznan.pl/index.php">WI PP</a></li>
+                </ul>
+                <p id="css">
+                    <img style="border:0;width:88px;height:31px"
+                        src="http://jigsaw.w3.org/css-validator/images/vcss-blue"
+                        alt="Poprawny CSS!" />
+                </p>
+            </footer>
+        </div>
+        <script type="text/javascript">
+            if (document.location.hash == "" || document.location.hash == "#")
+                document.location.hash = "#students";
+        </script>
+    </body>
+</html>
